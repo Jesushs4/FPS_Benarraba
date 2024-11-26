@@ -26,6 +26,10 @@ public class PlayerMovement : MonoBehaviour
     private bool isSprinting;
     private bool isMoving;
 
+    private LayerMask itemLayer;
+    private Transform itemTransform;
+    private bool isGrabbing;
+
     //Camera look sensitivity and max angle to limit vertical rotation
     [SerializeField] private float lookSentitivity = 1f;
     private float maxLookAngle = 80f;
@@ -36,6 +40,7 @@ public class PlayerMovement : MonoBehaviour
     {
         characterController = GetComponent<CharacterController>();
         cameraTransform = Camera.main.transform;
+        itemLayer = LayerMask.GetMask("Item");
 
         //Hide mouse cursor
         Cursor.lockState = CursorLockMode.Locked;
@@ -50,6 +55,7 @@ public class PlayerMovement : MonoBehaviour
 
         //Manage Camera Rotation
         LookAround();
+
     }
 
     /// <summary>
@@ -71,6 +77,20 @@ public class PlayerMovement : MonoBehaviour
         lookInput = context.ReadValue<Vector2>();
     }
 
+    public void Interact(InputAction.CallbackContext context)
+    {
+        if (CheckInteractuable() && context.started && !isGrabbing)
+        {
+            GrabObject();
+        } else if (isGrabbing && context.started)
+            {
+                DropObject();
+            }
+
+
+
+    }
+
 
     /// <summary>
     /// Receive Sprint input from Input System and change isSprinting state
@@ -80,6 +100,7 @@ public class PlayerMovement : MonoBehaviour
     {
         //when action started or mantained
         isSprinting = context.started || context.performed;
+
     } 
 
 
@@ -127,6 +148,32 @@ public class PlayerMovement : MonoBehaviour
         verticalRotation -= lookInput.y * lookSentitivity;
         verticalRotation = Mathf.Clamp(verticalRotation, -maxLookAngle, maxLookAngle);
         cameraTransform.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
+    }
+
+    private bool CheckInteractuable()
+    {
+        float rayLength = 2f;
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, rayLength, itemLayer))
+        {
+            itemTransform = hit.transform;
+            return true;
+        }
+        return false;
+    }
+
+    private void GrabObject()
+    {
+        isGrabbing = true;
+        itemTransform.SetParent(transform);
+        itemTransform.GetComponent<Rigidbody>().isKinematic = true;
+        itemTransform.position = cameraTransform.position;
+    }
+
+    private void DropObject()
+    {
+        isGrabbing = false;
+        itemTransform.GetComponent<Rigidbody>().isKinematic = false;
+        itemTransform.SetParent(null);
     }
 
 
