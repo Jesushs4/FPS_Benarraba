@@ -31,6 +31,9 @@ public class PlayerMovement : MonoBehaviour
     private Transform itemTransform;
     private bool isGrabbing;
 
+    private LayerMask placeholderLayer;
+    private Transform placeholderTransform;
+
     //Camera look sensitivity and max angle to limit vertical rotation
     [SerializeField] private float lookSentitivity = 1f;
     private float maxLookAngle = 80f;
@@ -42,6 +45,8 @@ public class PlayerMovement : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         cameraTransform = Camera.main.transform;
         itemLayer = LayerMask.GetMask("Item");
+        placeholderLayer = LayerMask.GetMask("Ladder");
+
 
         //Hide mouse cursor
         Cursor.lockState = CursorLockMode.Locked;
@@ -192,7 +197,27 @@ public class PlayerMovement : MonoBehaviour
         if (itemTransform.CompareTag("Item")) {
             itemTransform.GetComponent<ItemTest>().UseTest();
         }
+
+        if (itemTransform.CompareTag("Ladder") && CheckPlaceable())
+        {
+            
+            itemTransform.GetComponent<Ladder>().PutLadder(placeholderTransform);
+            isGrabbing = false;
+            itemTransform.SetParent(null);
+            itemTransform = null;
+            
+        }
         
+    }
+
+    private bool CheckPlaceable()
+    {
+        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 4f, placeholderLayer))
+        {
+            placeholderTransform = hit.transform;
+            return true;
+        }
+        return false;
     }
 
 
