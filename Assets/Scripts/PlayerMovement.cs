@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float multiplier = 2f;
     [SerializeField] private float jumpForce = 1.5f;
     [SerializeField] private float gravity = Physics.gravity.y;
+    [SerializeField] private Transform hand;
 
     //Input fields for movement and look actions
     private Vector2 moveInput;
@@ -91,6 +92,14 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
+    public void Attack(InputAction.CallbackContext context)
+    {
+        if (context.started && isGrabbing)
+        {
+            UseObject();
+        }
+    }
+
 
     /// <summary>
     /// Receive Sprint input from Input System and change isSprinting state
@@ -166,7 +175,7 @@ public class PlayerMovement : MonoBehaviour
         isGrabbing = true;
         itemTransform.SetParent(transform);
         itemTransform.GetComponent<Rigidbody>().isKinematic = true;
-        itemTransform.position = cameraTransform.position;
+        itemTransform.position = hand.position;
     }
 
     private void DropObject()
@@ -174,6 +183,15 @@ public class PlayerMovement : MonoBehaviour
         isGrabbing = false;
         itemTransform.GetComponent<Rigidbody>().isKinematic = false;
         itemTransform.SetParent(null);
+        itemTransform = null;
+    }
+
+    private void UseObject()
+    {
+        if (itemTransform.CompareTag("Item")) {
+            itemTransform.GetComponent<ItemTest>().UseTest();
+        }
+        
     }
 
 
