@@ -159,7 +159,7 @@ public class PlayerMovement : MonoBehaviour
         cameraTransform.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
     }
 
-    private bool CheckInteractuable()
+    public bool CheckInteractuable()
     {
         float rayLength = 2f;
         if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, rayLength, itemLayer))
@@ -173,9 +173,10 @@ public class PlayerMovement : MonoBehaviour
     private void GrabObject()
     {
         isGrabbing = true;
-        itemTransform.SetParent(transform);
+        itemTransform.SetParent(hand);
         itemTransform.GetComponent<Rigidbody>().isKinematic = true;
         itemTransform.position = hand.position;
+        itemTransform.rotation = hand.rotation;
     }
 
     private void DropObject()
