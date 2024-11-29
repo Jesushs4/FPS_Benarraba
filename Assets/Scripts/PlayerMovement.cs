@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     //Velocity and rotation variables
     private Vector2 velocity;
     private float verticalVelocity;
-    private float verticalRotation=0;
+    private float verticalRotation = 0;
 
     //Is Sprinting state
     private bool isSprinting;
@@ -31,9 +31,17 @@ public class PlayerMovement : MonoBehaviour
     private Transform itemTransform;
     private bool isGrabbing;
 
+    private LayerMask placeholderLayer;
+    private Transform placeholderTransform;
+
     //Camera look sensitivity and max angle to limit vertical rotation
     [SerializeField] private float lookSentitivity = 1f;
     private float maxLookAngle = 80f;
+
+    private bool isClimbing = false;
+    [SerializeField] private float climbSpeed = 3f;
+    private Transform currentLadder;
+
 
 
 
@@ -42,6 +50,8 @@ public class PlayerMovement : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         cameraTransform = Camera.main.transform;
         itemLayer = LayerMask.GetMask("Item");
+        placeholderLayer = LayerMask.GetMask("Ladder");
+
 
         //Hide mouse cursor
         Cursor.lockState = CursorLockMode.Locked;
@@ -51,8 +61,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        //Manage Player Movement
-        MovePlayer();
+        if (isClimbing)
+        {
+            ClimbLadder();
+        }
+        else
+        {
+            MovePlayer();
+        }
 
         //Manage Camera Rotation
         LookAround();
@@ -65,7 +81,7 @@ public class PlayerMovement : MonoBehaviour
     /// <param name="context"></param>
     public void Move(InputAction.CallbackContext context)
     {
-        moveInput = context.ReadValue<Vector2>(); 
+        moveInput = context.ReadValue<Vector2>();
         isMoving = moveInput != Vector2.zero;
     }
 
@@ -80,15 +96,24 @@ public class PlayerMovement : MonoBehaviour
 
     public void Interact(InputAction.CallbackContext context)
     {
+        if (context.started && currentLadder != null)
+        {
+            isClimbing = !isClimbing;
+
+            if (!isClimbing)
+            {
+                verticalVelocity = 0f;
+            }
+        }
+
         if (CheckInteractuable() && context.started && !isGrabbing)
         {
             GrabObject();
-        } else if (isGrabbing && context.started)
-            {
-                DropObject();
-            }
-
-
+        }
+        else if (isGrabbing && context.started)
+        {
+            DropObject();
+        }
 
     }
 
@@ -110,7 +135,26 @@ public class PlayerMovement : MonoBehaviour
         //when action started or mantained
         isSprinting = context.started || context.performed;
 
-    } 
+    }
+
+    private void ClimbLadder()
+    {
+        Vector3 upwardDirection = Vector3.up;
+
+        Vector3 lateralDirection = -Vector3.Cross(currentLadder.forward, upwardDirection).normalized;
+
+        Vector3 climbMovement = upwardDirection * moveInput.y * climbSpeed;
+        Vector3 lateralMovement = lateralDirection * moveInput.x * climbSpeed;
+
+        Vector3 finalMovement = climbMovement + lateralMovement;
+
+        transform.position += finalMovement * Time.deltaTime;
+
+        if (moveInput == Vector2.zero)
+        {
+            verticalVelocity = 0f;
+        }
+    }
 
 
     /// <summary>
@@ -118,6 +162,7 @@ public class PlayerMovement : MonoBehaviour
     /// </summary>
     private void MovePlayer()
     {
+
         //Falling Down
         if (characterController.isGrounded)
         {
@@ -130,18 +175,13 @@ public class PlayerMovement : MonoBehaviour
             verticalVelocity += gravity * Time.deltaTime;
         }
 
-        Vector3 move = new Vector3(0, verticalVelocity,0);
-        characterController.Move(move * Time.deltaTime);
-
-        //Movement 
         Vector3 moveDirection = new Vector3(moveInput.x, 0, moveInput.y);
         moveDirection = transform.TransformDirection(moveDirection);
-        float targetSpeed = isSprinting ? speed * multiplier: speed;
-        characterController.Move(moveDirection * targetSpeed * Time.deltaTime);
 
-        //Apply gravity constantly to posibility Jump
-        velocity.y += gravity * Time.deltaTime;
-        characterController.Move(velocity * Time.deltaTime);
+        float targetSpeed = isSprinting ? speed * multiplier : speed;
+        Vector3 movement = moveDirection * targetSpeed + Vector3.up * verticalVelocity;
+
+        characterController.Move(movement * Time.deltaTime);
     }
 
     /// <summary>
@@ -189,11 +229,48 @@ public class PlayerMovement : MonoBehaviour
 
     private void UseObject()
     {
-        if (itemTransform.CompareTag("Item")) {
+        if (itemTransform.CompareTag("Item"))
+        {
             itemTransform.GetComponent<ItemTest>().UseTest();
         }
-        
+
+        if (itemTransform.CompareTag("Ladder") && CheckPlaceable())
+        {
+
+            itemTransform.GetComponent<Ladder>().PutLadder(placeholderTransform);
+            isGrabbing = false;
+            itemTransform.SetParent(null);
+            itemTransform = null;
+
+        }
+
+    }
+
+    private bool CheckPlaceable()
+    {
+        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 4f, placeholderLayer))
+        {
+            placeholderTransform = hit.transform;
+            return true;
+        }
+        return false;
     }
 
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Ladder"))
+        {
+            currentLadder = other.transform;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Ladder") && other.transform == currentLadder)
+        {
+            currentLadder = null;
+            isClimbing = false;
+        }
+    }
 }
