@@ -119,7 +119,23 @@ public class PlayerMovement : MonoBehaviour
 
     public void Attack(InputAction.CallbackContext context)
     {
-        if (context.started && isGrabbing)
+
+        if (isGrabbing && itemTransform.CompareTag("Extinguisher"))
+        {
+            Extinguisher extinguisher = itemTransform.GetComponent<Extinguisher>();
+            if (extinguisher != null)
+            {
+                if (context.started)
+                {
+                    extinguisher.StartExtinguish();
+                }
+                else if (context.canceled)
+                {
+                    extinguisher.StopExtinguishing();
+                }
+            }
+        }
+        else if (context.started && isGrabbing)
         {
             UseObject();
         }
@@ -244,11 +260,13 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
+
+
     }
 
     private bool CheckPlaceable()
     {
-        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 4f, placeholderLayer))
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 4f, placeholderLayer))
         {
             placeholderTransform = hit.transform;
             return true;
