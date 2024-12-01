@@ -34,6 +34,9 @@ public class PlayerMovement : MonoBehaviour
     private LayerMask placeholderLayer;
     private Transform placeholderTransform;
 
+    private LayerMask cageLayer;
+
+
     //Camera look sensitivity and max angle to limit vertical rotation
     [SerializeField] private float lookSentitivity = 1f;
     private float maxLookAngle = 80f;
@@ -51,6 +54,8 @@ public class PlayerMovement : MonoBehaviour
         cameraTransform = Camera.main.transform;
         itemLayer = LayerMask.GetMask("Item");
         placeholderLayer = LayerMask.GetMask("Ladder");
+        cageLayer = LayerMask.GetMask("Cage");
+
 
 
         //Hide mouse cursor
@@ -260,6 +265,11 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
+        if (itemTransform.CompareTag("Lockpick") && CheckCage())
+        {
+            Debug.Log("HOLA");
+        }
+
 
 
     }
@@ -272,6 +282,11 @@ public class PlayerMovement : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    private bool CheckCage()
+    {
+        return Physics.Raycast(cameraTransform.position, cameraTransform.forward, 4f, cageLayer);
     }
 
 
