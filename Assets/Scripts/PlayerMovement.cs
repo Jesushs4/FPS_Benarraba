@@ -31,11 +31,14 @@ public class PlayerMovement : MonoBehaviour
     private Transform itemTransform;
     private bool isGrabbing;
 
+    private bool isLockpicking = false;
+
     private LayerMask placeholderLayer;
     private Transform placeholderTransform;
 
     private LayerMask cageLayer;
 
+    [SerializeField] private GameObject lockpickPanel;
 
     //Camera look sensitivity and max angle to limit vertical rotation
     [SerializeField] private float lookSentitivity = 1f;
@@ -44,6 +47,8 @@ public class PlayerMovement : MonoBehaviour
     private bool isClimbing = false;
     [SerializeField] private float climbSpeed = 3f;
     private Transform currentLadder;
+
+    private Lockpick lockpick;
 
 
 
@@ -57,6 +62,9 @@ public class PlayerMovement : MonoBehaviour
         cageLayer = LayerMask.GetMask("Cage");
 
 
+        lockpick = lockpickPanel.GetComponent<Lockpick>();
+
+
 
         //Hide mouse cursor
         Cursor.lockState = CursorLockMode.Locked;
@@ -66,6 +74,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        isLockpicking = lockpickPanel.activeSelf;
         if (isClimbing)
         {
             ClimbLadder();
@@ -101,6 +110,11 @@ public class PlayerMovement : MonoBehaviour
 
     public void Interact(InputAction.CallbackContext context)
     {
+        if (isLockpicking && context.started)
+        {
+            lockpick.HitNeedle();
+            return;
+        }
         if (context.started && currentLadder != null)
         {
             isClimbing = !isClimbing;
@@ -267,7 +281,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (itemTransform.CompareTag("Lockpick") && CheckCage())
         {
-            Debug.Log("HOLA");
+            lockpickPanel.SetActive(true);
+            lockpick.StartMinigame();
         }
 
 
