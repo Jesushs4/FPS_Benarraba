@@ -232,7 +232,18 @@ public class PlayerMovement : MonoBehaviour
         itemTransform.SetParent(hand);
         itemTransform.GetComponent<Rigidbody>().isKinematic = true;
         itemTransform.position = hand.position;
-        itemTransform.rotation = hand.rotation;
+        if (itemTransform.CompareTag("Extinguisher"))
+        {
+            itemTransform.localRotation = Quaternion.Euler(-90, hand.rotation.y, 90);
+        } else if (itemTransform.CompareTag("Ladder"))
+        {
+            itemTransform.localRotation = Quaternion.Euler(hand.rotation.x, 60, 90);
+        }
+        else
+        {
+            itemTransform.rotation = hand.rotation;
+        }
+        
     }
 
     private void DropObject()
