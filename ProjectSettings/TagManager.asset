@@ -9,6 +9,7 @@ TagManager:
   - Item
   - Ladder
   - Extinguisher
+  - Lockpick
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - Item
   - Ladder
   - Fire
-  - 
+  - Cage
   - 
   - 
   - 
