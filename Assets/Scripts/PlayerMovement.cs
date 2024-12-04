@@ -314,19 +314,18 @@ public class PlayerMovement : MonoBehaviour
                 lever.PutLever(placeholderLeverTransform);
                 leverTransform = itemTransform;
             }
-        if (itemTransform.CompareTag("Lockpick") && CheckCage())
-        {
-            lockpickPanel.SetActive(true);
-            lockpick.StartMinigame();
-        }
-
-
 
             isGrabbing = false;
             itemTransform.SetParent(null);
             itemTransform = null;
             leverPlaced = true;
             return;
+        }
+
+        if (itemTransform.CompareTag("Lockpick") && CheckCage())
+        {
+            lockpickPanel.SetActive(true);
+            lockpick.StartMinigame();
         }
 
     }
