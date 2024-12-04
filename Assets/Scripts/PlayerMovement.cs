@@ -31,8 +31,13 @@ public class PlayerMovement : MonoBehaviour
     private Transform itemTransform;
     private bool isGrabbing;
 
-    private LayerMask placeholderLayer;
-    private Transform placeholderTransform;
+    private LayerMask placeholderLadderLayer;
+    private Transform placeholderLadderTransform;
+
+    private LayerMask placeholderLeverLayer;
+    private Transform placeholderLeverTransform;
+    private Transform leverTransform;
+    private bool leverPlaced = false;
 
     //Camera look sensitivity and max angle to limit vertical rotation
     [SerializeField] private float lookSentitivity = 1f;
@@ -50,7 +55,8 @@ public class PlayerMovement : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         cameraTransform = Camera.main.transform;
         itemLayer = LayerMask.GetMask("Item");
-        placeholderLayer = LayerMask.GetMask("Ladder");
+        placeholderLadderLayer = LayerMask.GetMask("Ladder");
+        placeholderLeverLayer = LayerMask.GetMask("Lever");
 
 
         //Hide mouse cursor
@@ -135,6 +141,11 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
+        else if (leverPlaced && CheckLeverPlaceable() && context.started)
+        {
+            Lever lever = leverTransform.GetComponent<Lever>();
+            lever.RotateLever();
+        }
         else if (context.started && isGrabbing)
         {
             UseObject();
@@ -155,6 +166,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void ClimbLadder()
     {
+
         Vector3 upwardDirection = Vector3.up;
 
         Vector3 lateralDirection = -Vector3.Cross(currentLadder.forward, upwardDirection).normalized;
@@ -164,7 +176,7 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 finalMovement = climbMovement + lateralMovement;
 
-        transform.position += finalMovement * Time.deltaTime;
+        characterController.Move(finalMovement * Time.deltaTime);
 
         if (moveInput == Vector2.zero)
         {
@@ -256,30 +268,60 @@ public class PlayerMovement : MonoBehaviour
 
     private void UseObject()
     {
-        if (itemTransform.CompareTag("Item"))
+        if (itemTransform == null)
         {
-            itemTransform.GetComponent<ItemTest>().UseTest();
+            return;
         }
 
-        if (itemTransform.CompareTag("Ladder") && CheckPlaceable())
-        {
 
-            itemTransform.GetComponent<Ladder>().PutLadder(placeholderTransform);
+        if (itemTransform.CompareTag("Ladder") && CheckLadderPlaceable())
+        {
+            var ladder = itemTransform.GetComponent<Ladder>();
+            if (ladder != null)
+            {
+                ladder.PutLadder(placeholderLadderTransform);
+            }
+
             isGrabbing = false;
             itemTransform.SetParent(null);
             itemTransform = null;
-
+            return;
         }
 
+        if (itemTransform.CompareTag("Lever") && CheckLeverPlaceable())
+        {
+            var lever = itemTransform.GetComponent<Lever>();
+            if (lever != null)
+            {
+                lever.PutLever(placeholderLeverTransform);
+                leverTransform = itemTransform;
+            }
 
+
+            isGrabbing = false;
+            itemTransform.SetParent(null);
+            itemTransform = null;
+            leverPlaced = true;
+            return;
+        }
 
     }
 
-    private bool CheckPlaceable()
+    private bool CheckLadderPlaceable()
     {
-        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 4f, placeholderLayer))
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 4f, placeholderLadderLayer))
         {
-            placeholderTransform = hit.transform;
+            placeholderLadderTransform = hit.transform;
+            return true;
+        }
+        return false;
+    }
+
+    private bool CheckLeverPlaceable()
+    {
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 4f, placeholderLeverLayer))
+        {
+            placeholderLeverTransform = hit.transform;
             return true;
         }
         return false;
