@@ -38,6 +38,11 @@ public class PlayerMovement : MonoBehaviour
     private Transform placeholderLeverTransform;
     private Transform leverTransform;
     private bool leverPlaced = false;
+    private bool isLockpicking = false;
+
+    private LayerMask cageLayer;
+
+    [SerializeField] private GameObject lockpickPanel;
 
     //Camera look sensitivity and max angle to limit vertical rotation
     [SerializeField] private float lookSentitivity = 1f;
@@ -46,6 +51,8 @@ public class PlayerMovement : MonoBehaviour
     private bool isClimbing = false;
     [SerializeField] private float climbSpeed = 3f;
     private Transform currentLadder;
+
+    private Lockpick lockpick;
 
 
 
@@ -57,6 +64,11 @@ public class PlayerMovement : MonoBehaviour
         itemLayer = LayerMask.GetMask("Item");
         placeholderLadderLayer = LayerMask.GetMask("Ladder");
         placeholderLeverLayer = LayerMask.GetMask("Lever");
+        cageLayer = LayerMask.GetMask("Cage");
+
+
+        lockpick = lockpickPanel.GetComponent<Lockpick>();
+
 
 
         //Hide mouse cursor
@@ -67,6 +79,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        isLockpicking = lockpickPanel.activeSelf;
         if (isClimbing)
         {
             ClimbLadder();
@@ -102,6 +115,11 @@ public class PlayerMovement : MonoBehaviour
 
     public void Interact(InputAction.CallbackContext context)
     {
+        if (isLockpicking && context.started)
+        {
+            lockpick.HitNeedle();
+            return;
+        }
         if (context.started && currentLadder != null)
         {
             isClimbing = !isClimbing;
@@ -296,6 +314,12 @@ public class PlayerMovement : MonoBehaviour
                 lever.PutLever(placeholderLeverTransform);
                 leverTransform = itemTransform;
             }
+        if (itemTransform.CompareTag("Lockpick") && CheckCage())
+        {
+            lockpickPanel.SetActive(true);
+            lockpick.StartMinigame();
+        }
+
 
 
             isGrabbing = false;
@@ -325,6 +349,11 @@ public class PlayerMovement : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    private bool CheckCage()
+    {
+        return Physics.Raycast(cameraTransform.position, cameraTransform.forward, 4f, cageLayer);
     }
 
 

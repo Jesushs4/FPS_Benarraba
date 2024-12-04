@@ -10,6 +10,7 @@ TagManager:
   - Ladder
   - Extinguisher
   - Lever
+  - Lockpick
   layers:
   - Default
   - TransparentFX
@@ -21,6 +22,7 @@ TagManager:
   - Ladder
   - Fire
   - Lever
+  - Cage
   - 
   - 
   - 
