@@ -1,9 +1,9 @@
+using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 
 public class Lever : MonoBehaviour
 {
-    private float rotationSpeed = 400f;
     private bool isRotating = false;
 
     public void PutLever(Transform placeholderTransform)
@@ -11,37 +11,25 @@ public class Lever : MonoBehaviour
 
         transform.position = placeholderTransform.position;
         transform.rotation = placeholderTransform.rotation;
+        gameObject.layer = LayerMask.GetMask("Default");
     }
 
     public void RotateLever()
     {
-        if (!isRotating) {
-            isRotating = true;
-            StartCoroutine(RotateLeverCoroutine());
-        }
-        
-    }
-
-    private IEnumerator RotateLeverCoroutine()
-    {
-        float totalRotation = 0f;
-        while (totalRotation < 360f)
+        if (!isRotating)
         {
-            float parcialRotation = rotationSpeed * Time.deltaTime;
+            isRotating = true;
+            transform.DORotate(
+                new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z - 360),
+                1f,
+                RotateMode.FastBeyond360) 
+                .OnComplete(() =>
+                {
+                    isRotating = false; 
+                });
 
-            if (totalRotation + parcialRotation > 360f)
-            {
-                parcialRotation = 360f - totalRotation;
-            }
-
-            transform.Rotate(0, 0, parcialRotation);
-            totalRotation += parcialRotation;
-
-            yield return null;
         }
-
-        transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 0);
-        isRotating = false;
     }
+
 
 }
