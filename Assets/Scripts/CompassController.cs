@@ -28,7 +28,7 @@ public class CompassController : MonoBehaviour
 
         DetectionCollider.radius = RadiusCreasing;
 
-        compassPointer.transform.LookAt(ovejaTarget.transform);
+        compassPointer.transform.LookAt(new Vector3(ovejaTarget.transform.position.x, compassPointer.transform.position.y, ovejaTarget.transform.position.z));
     }
 
 

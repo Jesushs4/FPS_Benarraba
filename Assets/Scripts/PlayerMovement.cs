@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -44,6 +45,9 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private GameObject lockpickPanel;
 
+    private LayerMask placeholderValveLayer;
+    private Transform placeholderValveTransform;
+
     //Camera look sensitivity and max angle to limit vertical rotation
     [SerializeField] private float lookSentitivity = 1f;
     private float maxLookAngle = 80f;
@@ -55,13 +59,15 @@ public class PlayerMovement : MonoBehaviour
     private Lockpick lockpick;
 
 
-
+    private bool ValvePlaced;
+    private Transform ValveTransform;
 
     private void Start()
     {
         characterController = GetComponent<CharacterController>();
         cameraTransform = Camera.main.transform;
         itemLayer = LayerMask.GetMask("Item");
+
         placeholderLadderLayer = LayerMask.GetMask("Ladder");
         placeholderLeverLayer = LayerMask.GetMask("Lever");
         cageLayer = LayerMask.GetMask("Cage");
@@ -69,7 +75,8 @@ public class PlayerMovement : MonoBehaviour
 
         lockpick = lockpickPanel.GetComponent<Lockpick>();
 
-
+        placeholderLayer = LayerMask.GetMask("PlaceHolder");
+        placeholderValveLayer = LayerMask.GetMask("Valve");
 
         //Hide mouse cursor
         Cursor.lockState = CursorLockMode.Locked;
@@ -159,18 +166,25 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
+
         else if (leverPlaced && CheckLeverPlaceable() && context.started)
         {
             Lever lever = leverTransform.GetComponent<Lever>();
             lever.RotateLever();
         }
+
+        else if (ValvePlaced && CheckValvePlaceable() && context.started)
+        {
+            Valve valve = ValveTransform.GetComponent<Valve>();
+            valve.UseValve();
+        }
+
+
         else if (context.started && isGrabbing)
         {
             UseObject();
         }
     }
-
-
     /// <summary>
     /// Receive Sprint input from Input System and change isSprinting state
     /// </summary>
@@ -306,6 +320,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
+
         if (itemTransform.CompareTag("Lever") && CheckLeverPlaceable())
         {
             var lever = itemTransform.GetComponent<Lever>();
@@ -314,11 +329,23 @@ public class PlayerMovement : MonoBehaviour
                 lever.PutLever(placeholderLeverTransform);
                 leverTransform = itemTransform;
             }
+        }
+
+        if (itemTransform.CompareTag("Valve") && CheckValvePlaceable())
+        {
+
+            var valve = itemTransform.GetComponent<Valve>();
+
+            if (valve != null)
+            {
+                valve.PutValve(placeholderValveTransform);
+            }
 
             isGrabbing = false;
             itemTransform.SetParent(null);
+            ValveTransform = itemTransform;
             itemTransform = null;
-            leverPlaced = true;
+            ValvePlaced = true;
             return;
         }
 
@@ -327,8 +354,9 @@ public class PlayerMovement : MonoBehaviour
             lockpickPanel.SetActive(true);
             lockpick.StartMinigame();
         }
-
     }
+}
+
 
     private bool CheckLadderPlaceable()
     {
@@ -349,11 +377,21 @@ public class PlayerMovement : MonoBehaviour
         }
         return false;
     }
+    private bool CheckValvePlaceable()
+    {
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 4f, placeholderValveLayer))
+        {
+            placeholderValveTransform = hit.transform;
+            return true;
+        }
+        return false;
+    }
 
     private bool CheckCage()
     {
         return Physics.Raycast(cameraTransform.position, cameraTransform.forward, 4f, cageLayer);
     }
+
 
 
     private void OnTriggerEnter(Collider other)
@@ -373,3 +411,4 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 }
+
