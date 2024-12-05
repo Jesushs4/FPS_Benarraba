@@ -104,7 +104,14 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //Manage Camera Rotation
-        LookAround();
+        if (!GameManager.Instance.IsPaused)
+        {
+            LookAround();
+            Cursor.lockState = CursorLockMode.Locked;
+        } else
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
 
     }
 
