@@ -9,18 +9,20 @@ TagManager:
   - Item
   - Ladder
   - Extinguisher
+  - Sheep
+  - Valve
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - PlaceHolder
   - Water
   - UI
   - Item
   - Ladder
   - Fire
-  - 
-  - 
+  - Terrain
+  - Valve
   - 
   - 
   - 

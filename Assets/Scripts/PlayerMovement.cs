@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -34,6 +35,9 @@ public class PlayerMovement : MonoBehaviour
     private LayerMask placeholderLayer;
     private Transform placeholderTransform;
 
+    private LayerMask placeholderValveLayer;
+    private Transform placeholderValveTransform;
+
     //Camera look sensitivity and max angle to limit vertical rotation
     [SerializeField] private float lookSentitivity = 1f;
     private float maxLookAngle = 80f;
@@ -43,15 +47,16 @@ public class PlayerMovement : MonoBehaviour
     private Transform currentLadder;
 
 
-
+    private bool ValvePlaced;
+    private Transform ValveTransform;
 
     private void Start()
     {
         characterController = GetComponent<CharacterController>();
         cameraTransform = Camera.main.transform;
         itemLayer = LayerMask.GetMask("Item");
-        placeholderLayer = LayerMask.GetMask("Ladder");
-
+        placeholderLayer = LayerMask.GetMask("PlaceHolder");
+        placeholderValveLayer = LayerMask.GetMask("Valve");
 
         //Hide mouse cursor
         Cursor.lockState = CursorLockMode.Locked;
@@ -135,13 +140,18 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
+
+        else if (ValvePlaced && CheckValvePlaceable() && context.started)
+        {
+            Valve valve = ValveTransform.GetComponent<Valve>();
+            valve.UseValve();
+        }
+
         else if (context.started && isGrabbing)
         {
             UseObject();
         }
     }
-
-
     /// <summary>
     /// Receive Sprint input from Input System and change isSprinting state
     /// </summary>
@@ -260,6 +270,24 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
+        else if (itemTransform.CompareTag("Valve") && CheckValvePlaceable())
+        {
+
+            var valve = itemTransform.GetComponent<Valve>();
+
+            if (valve != null)
+            {
+                valve.PutValve(placeholderValveTransform);
+            }
+
+            isGrabbing = false;
+            itemTransform.SetParent(null);
+            ValveTransform = itemTransform;
+            itemTransform = null;
+            ValvePlaced = true;
+            return;
+        }
+
 
 
     }
@@ -269,6 +297,17 @@ public class PlayerMovement : MonoBehaviour
         if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 4f, placeholderLayer))
         {
             placeholderTransform = hit.transform;
+            return true;
+        }
+        return false;
+    }
+
+        
+    private bool CheckValvePlaceable()
+    {
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 4f, placeholderValveLayer))
+        {
+            placeholderValveTransform = hit.transform;
             return true;
         }
         return false;
@@ -292,3 +331,4 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 }
+
