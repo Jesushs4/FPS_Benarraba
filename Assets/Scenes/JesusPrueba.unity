@@ -2081,11 +2081,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3538730979621086892, guid: d06e022095468f240aeff7e9b760019f,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Look
+      objectReference: {fileID: 0}
     - target: {fileID: 4094975139594415498, guid: d06e022095468f240aeff7e9b760019f,
         type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4852375693542354580, guid: d06e022095468f240aeff7e9b760019f,
+        type: 3}
+      propertyPath: clickIcon
+      value: 
+      objectReference: {fileID: 21300000, guid: 1e77b2a99beb5454bb02b95bae27916a,
+        type: 3}
     - target: {fileID: 6198171682788369351, guid: d06e022095468f240aeff7e9b760019f,
         type: 3}
       propertyPath: m_LocalPosition.x
