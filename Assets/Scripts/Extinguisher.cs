@@ -40,4 +40,11 @@ public class Extinguisher : MonoBehaviour
             }
         }
     }
+
+    public bool CanExtinguish() {
+        
+        Transform playerTransform = Camera.main.transform;
+        return Physics.Raycast(playerTransform.position, playerTransform.forward, 4f, fireLayer);
+        
+    }
 }

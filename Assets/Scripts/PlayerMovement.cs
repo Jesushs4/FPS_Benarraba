@@ -33,6 +33,8 @@ public class PlayerMovement : MonoBehaviour
 
     private LayerMask placeholderLadderLayer;
     private Transform placeholderLadderTransform;
+    private bool ladderPlaced = false;
+    private LayerMask climbLayer;
 
     private LayerMask placeholderLeverLayer;
     private Transform placeholderLeverTransform;
@@ -54,8 +56,10 @@ public class PlayerMovement : MonoBehaviour
 
     private Lockpick lockpick;
 
-
-
+    public Transform ItemTransform { get => itemTransform; set => itemTransform = value; }
+    public bool LeverPlaced { get => leverPlaced; set => leverPlaced = value; }
+    public bool IsGrabbing { get => isGrabbing; set => isGrabbing = value; }
+    public bool LadderPlaced { get => ladderPlaced; set => ladderPlaced = value; }
 
     private void Start()
     {
@@ -65,6 +69,7 @@ public class PlayerMovement : MonoBehaviour
         placeholderLadderLayer = LayerMask.GetMask("Ladder");
         placeholderLeverLayer = LayerMask.GetMask("Lever");
         cageLayer = LayerMask.GetMask("Cage");
+        climbLayer = LayerMask.GetMask("Climbable");
 
 
         lockpick = lockpickPanel.GetComponent<Lockpick>();
@@ -120,7 +125,7 @@ public class PlayerMovement : MonoBehaviour
             lockpick.HitNeedle();
             return;
         }
-        if (context.started && currentLadder != null)
+        if (context.started && CheckLadder())
         {
             isClimbing = !isClimbing;
 
@@ -130,11 +135,11 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        if (CheckInteractuable() && context.started && !isGrabbing)
+        if (CheckInteractuable() && context.started && !IsGrabbing)
         {
             GrabObject();
         }
-        else if (isGrabbing && context.started)
+        else if (IsGrabbing && !CheckInteractuable() && context.started)
         {
             DropObject();
         }
@@ -144,9 +149,9 @@ public class PlayerMovement : MonoBehaviour
     public void Attack(InputAction.CallbackContext context)
     {
 
-        if (isGrabbing && itemTransform.CompareTag("Extinguisher"))
+        if (IsGrabbing && ItemTransform.CompareTag("Extinguisher"))
         {
-            Extinguisher extinguisher = itemTransform.GetComponent<Extinguisher>();
+            Extinguisher extinguisher = ItemTransform.GetComponent<Extinguisher>();
             if (extinguisher != null)
             {
                 if (context.started)
@@ -159,12 +164,12 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
-        else if (leverPlaced && CheckLeverPlaceable() && context.started)
+        else if (LeverPlaced && CheckLeverPlaceable() && context.started)
         {
             Lever lever = leverTransform.GetComponent<Lever>();
             lever.RotateLever();
         }
-        else if (context.started && isGrabbing)
+        else if (context.started && IsGrabbing)
         {
             UseObject();
         }
@@ -250,7 +255,10 @@ public class PlayerMovement : MonoBehaviour
         float rayLength = 2f;
         if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, rayLength, itemLayer))
         {
-            itemTransform = hit.transform;
+            if (!isGrabbing)
+            {
+                ItemTransform = hit.transform;
+            }
             return true;
         }
         return false;
@@ -258,71 +266,72 @@ public class PlayerMovement : MonoBehaviour
 
     private void GrabObject()
     {
-        isGrabbing = true;
-        itemTransform.SetParent(hand);
-        itemTransform.GetComponent<Rigidbody>().isKinematic = true;
-        itemTransform.position = hand.position;
-        if (itemTransform.CompareTag("Extinguisher"))
+        IsGrabbing = true;
+        ItemTransform.SetParent(hand);
+        ItemTransform.GetComponent<Rigidbody>().isKinematic = true;
+        ItemTransform.position = hand.position;
+        if (ItemTransform.CompareTag("Extinguisher"))
         {
-            itemTransform.localRotation = Quaternion.Euler(-90, hand.rotation.y, 90);
-        } else if (itemTransform.CompareTag("Ladder"))
+            ItemTransform.localRotation = Quaternion.Euler(-90, hand.rotation.y, 90);
+        } else if (ItemTransform.CompareTag("Ladder"))
         {
-            itemTransform.localRotation = Quaternion.Euler(hand.rotation.x, 60, 90);
+            ItemTransform.localRotation = Quaternion.Euler(hand.rotation.x, 60, 90);
         }
         else
         {
-            itemTransform.rotation = hand.rotation;
+            ItemTransform.rotation = hand.rotation;
         }
         
     }
 
     private void DropObject()
     {
-        isGrabbing = false;
-        itemTransform.GetComponent<Rigidbody>().isKinematic = false;
-        itemTransform.SetParent(null);
-        itemTransform = null;
+        IsGrabbing = false;
+        ItemTransform.GetComponent<Rigidbody>().isKinematic = false;
+        ItemTransform.SetParent(null);
+        ItemTransform = null;
     }
 
     private void UseObject()
     {
-        if (itemTransform == null)
+        if (ItemTransform == null)
         {
             return;
         }
 
 
-        if (itemTransform.CompareTag("Ladder") && CheckLadderPlaceable())
+        if (ItemTransform.CompareTag("Ladder") && CheckLadderPlaceable())
         {
-            var ladder = itemTransform.GetComponent<Ladder>();
+            var ladder = ItemTransform.GetComponent<Ladder>();
             if (ladder != null)
             {
                 ladder.PutLadder(placeholderLadderTransform);
+                ladderPlaced = true;
             }
 
-            isGrabbing = false;
-            itemTransform.SetParent(null);
-            itemTransform = null;
+            IsGrabbing = false;
+            ItemTransform.SetParent(null);
+            ItemTransform = null;
             return;
         }
 
-        if (itemTransform.CompareTag("Lever") && CheckLeverPlaceable())
+        if (ItemTransform.CompareTag("Lever") && CheckLeverPlaceable())
         {
-            var lever = itemTransform.GetComponent<Lever>();
+            var lever = ItemTransform.GetComponent<Lever>();
             if (lever != null)
             {
                 lever.PutLever(placeholderLeverTransform);
-                leverTransform = itemTransform;
+                leverTransform = ItemTransform;
             }
 
-            isGrabbing = false;
-            itemTransform.SetParent(null);
-            itemTransform = null;
-            leverPlaced = true;
+            IsGrabbing = false;
+            ItemTransform.SetParent(null);
+            ItemTransform = null;
+            LeverPlaced = true;
             return;
         }
 
-        if (itemTransform.CompareTag("Lockpick") && CheckCage())
+        if (ItemTransform.CompareTag("Lockpick") && CheckCage())
         {
             lockpickPanel.SetActive(true);
             lockpick.StartMinigame();
@@ -330,7 +339,7 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    private bool CheckLadderPlaceable()
+    public bool CheckLadderPlaceable()
     {
         if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 4f, placeholderLadderLayer))
         {
@@ -340,7 +349,7 @@ public class PlayerMovement : MonoBehaviour
         return false;
     }
 
-    private bool CheckLeverPlaceable()
+    public bool CheckLeverPlaceable()
     {
         if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 4f, placeholderLeverLayer))
         {
@@ -350,23 +359,31 @@ public class PlayerMovement : MonoBehaviour
         return false;
     }
 
-    private bool CheckCage()
+    public bool CheckCage()
     {
         return Physics.Raycast(cameraTransform.position, cameraTransform.forward, 4f, cageLayer);
     }
 
-
-    private void OnTriggerEnter(Collider other)
+    private bool CheckLadder()
     {
-        if (other.CompareTag("Ladder"))
+        float rayLength = 2f;
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, rayLength, climbLayer))
         {
-            currentLadder = other.transform;
+            currentLadder = hit.transform;
+            return true;
         }
+
+        if (!isClimbing)
+        {
+            currentLadder = null;
+        }
+        return false;
     }
+
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Ladder") && other.transform == currentLadder)
+        if (other.CompareTag("Ladder"))
         {
             currentLadder = null;
             isClimbing = false;
