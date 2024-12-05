@@ -9,6 +9,7 @@ TagManager:
   - Item
   - Ladder
   - Extinguisher
+  - Lever
   - Lockpick
   layers:
   - Default
@@ -20,6 +21,7 @@ TagManager:
   - Item
   - Ladder
   - Fire
+  - Lever
   - Cage
   - 
   - 
