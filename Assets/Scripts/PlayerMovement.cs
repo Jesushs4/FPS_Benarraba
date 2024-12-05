@@ -75,7 +75,6 @@ public class PlayerMovement : MonoBehaviour
 
         lockpick = lockpickPanel.GetComponent<Lockpick>();
 
-        placeholderLayer = LayerMask.GetMask("PlaceHolder");
         placeholderValveLayer = LayerMask.GetMask("Valve");
 
         //Hide mouse cursor
@@ -254,7 +253,6 @@ public class PlayerMovement : MonoBehaviour
         transform.Rotate(Vector3.up * horizontalRotation);
 
         //Vertical rotation (X-axis) with clamping to prevent over-rotation
-        verticalRotation -= lookInput.y * lookSentitivity;
         verticalRotation = Mathf.Clamp(verticalRotation, -maxLookAngle, maxLookAngle);
         cameraTransform.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
     }
@@ -355,7 +353,7 @@ public class PlayerMovement : MonoBehaviour
             lockpick.StartMinigame();
         }
     }
-}
+
 
 
     private bool CheckLadderPlaceable()
