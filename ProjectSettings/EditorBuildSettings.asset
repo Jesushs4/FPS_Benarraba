@@ -8,6 +8,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/OutdoorsScene.unity
     guid: 8124e5870f4fd4c779e7a5f994e84ad1
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 145a35ac9f2e8b044af5a10c7d4e8473
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 519ddc876a7260144baea89142e9d5da,
       type: 3}
