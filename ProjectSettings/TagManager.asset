@@ -11,11 +11,13 @@ TagManager:
   - Extinguisher
   - Lever
   - Lockpick
+  - Sheep
+  - Valve
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - PlaceHolder
   - Water
   - UI
   - Item
@@ -24,6 +26,8 @@ TagManager:
   - Lever
   - Cage
   - 
+  - Terrain
+  - Valve
   - 
   - 
   - 
