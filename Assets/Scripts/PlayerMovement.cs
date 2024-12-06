@@ -445,7 +445,7 @@ public class PlayerMovement : MonoBehaviour
         return false;
     }
 
-    private bool LookingAtNpc()
+    public bool LookingAtNpc()
     {
         if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 4f, npcLayer))
         {

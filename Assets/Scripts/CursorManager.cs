@@ -8,6 +8,7 @@ public class CursorManager : MonoBehaviour
     [SerializeField] private Sprite grabIcon;
     [SerializeField] private Image cursor;
     [SerializeField] private Sprite clickIcon;
+    [SerializeField] private Sprite dialogueIcon;
 
     private void Awake()
     {
@@ -60,6 +61,11 @@ public class CursorManager : MonoBehaviour
         {
             cursor.sprite = grabIcon;
                 return;
+        }
+
+        if (playerMovement.LookingAtNpc())
+        {
+            cursor.sprite = dialogueIcon;
         }
 
         cursor.sprite = dotIcon;
