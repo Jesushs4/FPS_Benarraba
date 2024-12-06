@@ -66,6 +66,7 @@ public class CursorManager : MonoBehaviour
         if (playerMovement.LookingAtNpc())
         {
             cursor.sprite = dialogueIcon;
+            return;
         }
 
         cursor.sprite = dotIcon;

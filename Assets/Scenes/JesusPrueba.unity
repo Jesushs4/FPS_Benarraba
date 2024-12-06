@@ -2015,8 +2015,14 @@ PrefabInstance:
     - target: {fileID: 4094975139594415498, guid: d06e022095468f240aeff7e9b760019f,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4852375693542354580, guid: d06e022095468f240aeff7e9b760019f,
+        type: 3}
+      propertyPath: dialogueIcon
+      value: 
+      objectReference: {fileID: 21300000, guid: e848a5aeb5bc3e24580ecd7d76674ea3,
+        type: 3}
     - target: {fileID: 6198171682788369351, guid: d06e022095468f240aeff7e9b760019f,
         type: 3}
       propertyPath: m_LocalPosition.x
