@@ -12,7 +12,9 @@ public class Lockpick : MonoBehaviour
     private bool isResetting = false;
 
     private int hitCount = 0;
+    private int hitNeeded = 5;
 
+    [SerializeField] private Image imageProgress;
 
     private void Update()
     {
@@ -21,7 +23,7 @@ public class Lockpick : MonoBehaviour
             RotateNeedle();
         }
 
-        if (hitCount >= 5)
+        if (hitCount >= hitNeeded)
         {
             gameObject.SetActive(false);
         }
@@ -39,6 +41,7 @@ public class Lockpick : MonoBehaviour
             if (IsNeedleInHitArea())
             {
                 hitCount++;
+                imageProgress.fillAmount = (float)hitCount / hitNeeded;
             }
 
             StartCoroutine(NewLockpick());
@@ -91,4 +94,5 @@ public class Lockpick : MonoBehaviour
         StartMinigame();
         isResetting = false;
     }
+
 }
