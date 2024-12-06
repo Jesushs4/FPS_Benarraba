@@ -60,6 +60,9 @@ public class PlayerMovement : MonoBehaviour
 
     private Lockpick lockpick;
 
+    private LayerMask npcLayer;
+    private Transform currentNpc;
+    private bool inDialogue = false;
 
     private bool ValvePlaced;
     private Transform ValveTransform;
@@ -79,6 +82,7 @@ public class PlayerMovement : MonoBehaviour
         placeholderLeverLayer = LayerMask.GetMask("Lever");
         cageLayer = LayerMask.GetMask("Cage");
         climbLayer = LayerMask.GetMask("Climbable");
+        npcLayer = LayerMask.GetMask("NPC");
 
 
         lockpick = lockpickPanel.GetComponent<Lockpick>();
@@ -93,6 +97,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.Instance.InDialogue)
+        {
+            return;
+        }
         isLockpicking = lockpickPanel.activeSelf;
         if (isClimbing)
         {
@@ -192,6 +200,11 @@ public class PlayerMovement : MonoBehaviour
         {
             Valve valve = ValveTransform.GetComponent<Valve>();
             valve.UseValve();
+        }
+
+        else if (LookingAtNpc() && context.started)
+        {
+           currentNpc.GetComponent<DialogueBox>().Talk();
         }
 
 
@@ -428,6 +441,16 @@ public class PlayerMovement : MonoBehaviour
         if (!isClimbing)
         {
             currentLadder = null;
+        }
+        return false;
+    }
+
+    private bool LookingAtNpc()
+    {
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 4f, npcLayer))
+        {
+            currentNpc = hit.transform;
+            return true;
         }
         return false;
     }
