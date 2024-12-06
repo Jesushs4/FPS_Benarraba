@@ -5,9 +5,11 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     private bool isPaused = false;
+    private bool inDialogue = false;
 
     public static GameManager Instance { get; private set; }
     public bool IsPaused { get => isPaused; set => isPaused = value; }
+    public bool InDialogue { get => inDialogue; set => inDialogue = value; }
 
     [SerializeField] private GameObject pausePanel;
 
