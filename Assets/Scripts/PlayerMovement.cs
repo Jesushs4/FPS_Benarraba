@@ -50,6 +50,9 @@ public class PlayerMovement : MonoBehaviour
     private LayerMask placeholderValveLayer;
     private Transform placeholderValveTransform;
 
+    private LayerMask sheepLayer;
+    private GameObject actualSheep;
+
     //Camera look sensitivity and max angle to limit vertical rotation
     [SerializeField] private float lookSentitivity = 1f;
     private float maxLookAngle = 80f;
@@ -83,7 +86,7 @@ public class PlayerMovement : MonoBehaviour
         cageLayer = LayerMask.GetMask("Cage");
         climbLayer = LayerMask.GetMask("Climbable");
         npcLayer = LayerMask.GetMask("NPC");
-
+        sheepLayer = LayerMask.GetMask("SheepLayer");
 
         lockpick = lockpickPanel.GetComponent<Lockpick>();
 
@@ -207,7 +210,10 @@ public class PlayerMovement : MonoBehaviour
            currentNpc.GetComponent<DialogueBox>().Talk();
         }
 
-
+        else if (CheckIsSheep() && context.started)
+        {
+            actualSheep.GetComponent<OvejaInteractable>().SheepCounter();
+        }
 
         else if (context.started && IsGrabbing)
         {
@@ -413,11 +419,21 @@ public class PlayerMovement : MonoBehaviour
         }
         return false;
     }
-    private bool CheckValvePlaceable()
+    public bool CheckValvePlaceable()
     {
         if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 4f, placeholderValveLayer))
         {
             placeholderValveTransform = hit.transform;
+            return true;
+        }
+        return false;
+    }
+
+    public bool CheckIsSheep()
+    {
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 4f, sheepLayer))
+        {
+            actualSheep = hit.transform.gameObject;
             return true;
         }
         return false;

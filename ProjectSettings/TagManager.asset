@@ -13,6 +13,7 @@ TagManager:
   - Lockpick
   - Sheep
   - Valve
+  - Goal
   layers:
   - Default
   - TransparentFX
@@ -29,6 +30,7 @@ TagManager:
   - Terrain
   - Valve
   - NPC
+  - SheepLayer
   - 
   - 
   - 

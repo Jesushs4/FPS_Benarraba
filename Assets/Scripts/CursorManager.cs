@@ -28,7 +28,10 @@ public class CursorManager : MonoBehaviour
             bool canPlaceLadder = playerMovement.CheckLadderPlaceable() && playerMovement.ItemTransform.CompareTag("Ladder");
             bool canPickLock = playerMovement.CheckCage() && playerMovement.ItemTransform.CompareTag("Lockpick");
             bool canExtinguish = playerMovement.ItemTransform.CompareTag("Extinguisher");
-            if (canPlaceLadder || canPlaceLever || canPickLock)
+            
+            bool canValve = playerMovement.CheckValvePlaceable() && playerMovement.ItemTransform.CompareTag("Valve");
+
+            if (canPlaceLadder || canPlaceLever || canPickLock || canValve)
             {
                 cursor.sprite = clickIcon;
                 return;
@@ -42,9 +45,16 @@ public class CursorManager : MonoBehaviour
             }
         }
 
+        bool canSheep = playerMovement.CheckIsSheep();
         bool LeverPlaced = playerMovement.CheckLeverPlaceable() && playerMovement.LeverPlaced;
 
         if (LeverPlaced) {
+            cursor.sprite = clickIcon;
+            return;
+        }
+
+        if (canSheep) 
+        {
             cursor.sprite = clickIcon;
             return;
         }

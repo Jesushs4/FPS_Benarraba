@@ -7,8 +7,9 @@ public class Valve : MonoBehaviour
     private bool isRotating = false;
     private bool fountainOff;
     [SerializeField] private ParticleSystem fountain;
+    [SerializeField] private GameObject fountainSheep;
 
-    public void PutValve(Transform placeholderTransform)
+    public void PutValve (Transform placeholderTransform)
     {
 
         transform.position = placeholderTransform.position;
@@ -33,11 +34,10 @@ public class Valve : MonoBehaviour
            });
         }
 
-        if (!fountainOff)
-        {
-            var emission = fountain.emission;
+        var emission = fountain.emission;
+         emission.rateOverTime = 0f;
 
-            emission.rateOverTime = 0f;
-        }
+        fountainSheep.GetComponent<Rigidbody>().isKinematic = false;
+
     }
 }
