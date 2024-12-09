@@ -1380,6 +1380,16 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1632373143892800679, guid: 906f4b743b69f044d970479fbc709c04,
         type: 3}
+      propertyPath: endTime
+      value: 
+      objectReference: {fileID: 997118875}
+    - target: {fileID: 1632373143892800679, guid: 906f4b743b69f044d970479fbc709c04,
+        type: 3}
+      propertyPath: endPanel
+      value: 
+      objectReference: {fileID: 1031962362}
+    - target: {fileID: 1632373143892800679, guid: 906f4b743b69f044d970479fbc709c04,
+        type: 3}
       propertyPath: hudPanel
       value: 
       objectReference: {fileID: 1894856280}
@@ -1536,6 +1546,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1057633834439331809, guid: d06e022095468f240aeff7e9b760019f,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1957668560}
     - target: {fileID: 1195973734037116047, guid: d06e022095468f240aeff7e9b760019f,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -1564,17 +1579,17 @@ PrefabInstance:
     - target: {fileID: 6198171682788369351, guid: d06e022095468f240aeff7e9b760019f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -12.76
+      value: 29.99
       objectReference: {fileID: 0}
     - target: {fileID: 6198171682788369351, guid: d06e022095468f240aeff7e9b760019f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 277.3
+      value: 273.66
       objectReference: {fileID: 0}
     - target: {fileID: 6198171682788369351, guid: d06e022095468f240aeff7e9b760019f,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 27.26
+      value: -3.42
       objectReference: {fileID: 0}
     - target: {fileID: 6198171682788369351, guid: d06e022095468f240aeff7e9b760019f,
         type: 3}
@@ -1616,6 +1631,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 6860775908194780446, guid: d06e022095468f240aeff7e9b760019f,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1957668560}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2239,6 +2259,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: OvejaFuego
       objectReference: {fileID: 0}
+    - target: {fileID: 6849444512481227013, guid: 62fec310ff4771648a4c5e69e50957ea,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2520,11 +2545,29 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.2821738, y: 14.9175415, z: 25.525192}
   m_Center: {x: 0.14110728, y: -2.4434814, z: -11.477867}
+--- !u!114 &997118875 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9142044174514649993, guid: d06e022095468f240aeff7e9b760019f,
+    type: 3}
+  m_PrefabInstance: {fileID: 656748597}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1000135846 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6758688819996564628, guid: 8bd267ed2ae61374fa3888ea079cca44,
     type: 3}
   m_PrefabInstance: {fileID: 2128837940}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1031962362 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4921606497041294832, guid: d06e022095468f240aeff7e9b760019f,
+    type: 3}
+  m_PrefabInstance: {fileID: 656748597}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1060273174 stripped
 Transform:
@@ -3177,6 +3220,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: OvejaJaula
+      objectReference: {fileID: 0}
+    - target: {fileID: 6849444512481227013, guid: 62fec310ff4771648a4c5e69e50957ea,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4590,6 +4638,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: OvejaPozo
+      objectReference: {fileID: 0}
+    - target: {fileID: 6849444512481227013, guid: 62fec310ff4771648a4c5e69e50957ea,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
