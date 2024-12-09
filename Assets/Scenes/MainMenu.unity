@@ -968,7 +968,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -0.98}
+  m_AnchoredPosition: {x: 0, y: -0.49}
   m_SizeDelta: {x: 20, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &817190638
@@ -993,8 +993,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: OVEJA A LA VISTA
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: a33fdc6edf3889c45a4188beb033c691, type: 2}
-  m_sharedMaterial: {fileID: 4736183093632511629, guid: a33fdc6edf3889c45a4188beb033c691,
+  m_fontAsset: {fileID: 11400000, guid: 3225608d4b713ab488347942d1093b09, type: 2}
+  m_sharedMaterial: {fileID: 405784902620926506, guid: 3225608d4b713ab488347942d1093b09,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -1019,8 +1019,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30
-  m_fontSizeBase: 30
+  m_fontSize: 34
+  m_fontSizeBase: 34
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1089,7 +1089,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 4736183093632511629, guid: a33fdc6edf3889c45a4188beb033c691, type: 2}
+  - {fileID: 405784902620926506, guid: 3225608d4b713ab488347942d1093b09, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

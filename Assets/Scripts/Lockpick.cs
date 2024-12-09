@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,9 +13,22 @@ public class Lockpick : MonoBehaviour
     private bool isResetting = false;
 
     private int hitCount = 0;
-    private int hitNeeded = 5;
+    private int hitNeeded = 4;
 
     [SerializeField] private Image imageProgress;
+    [SerializeField] private Transform cageDoor;
+    [SerializeField] private BoxCollider sheepCollider;
+
+    private bool isCompleted = false;
+    private bool isLockpicking = false;
+
+    public bool IsCompleted { get => isCompleted; set => isCompleted = value; }
+    public bool IsLockpicking { get => isLockpicking; set => isLockpicking = value; }
+
+    private void Awake()
+    {
+        sheepCollider.enabled = false;
+    }
 
     private void Update()
     {
@@ -26,12 +40,19 @@ public class Lockpick : MonoBehaviour
         if (hitCount >= hitNeeded)
         {
             gameObject.SetActive(false);
+            Vector3 targetRotation = cageDoor.eulerAngles + new Vector3(0, 90, 0);
+            cageDoor.DORotate(targetRotation, 1f)
+                .SetEase(Ease.InOutSine);
+            IsCompleted = true;
+            sheepCollider.enabled = true;
+            isLockpicking = false;
         }
     }
 
     public void StartMinigame()
     {
         SetRandomAngle();
+        isLockpicking = true;
     }
 
     public void HitNeedle()

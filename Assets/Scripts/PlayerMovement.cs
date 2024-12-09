@@ -41,7 +41,6 @@ public class PlayerMovement : MonoBehaviour
     private Transform placeholderLeverTransform;
     private Transform leverTransform;
     private bool leverPlaced = false;
-    private bool isLockpicking = false;
 
     private LayerMask cageLayer;
 
@@ -100,11 +99,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance.InDialogue)
+        if (GameManager.Instance.InDialogue || lockpick.IsLockpicking)
         {
             return;
         }
-        isLockpicking = lockpickPanel.activeSelf;
         if (isClimbing)
         {
             ClimbLadder();
@@ -147,7 +145,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Interact(InputAction.CallbackContext context)
     {
-        if (isLockpicking && context.started)
+        if (lockpick.IsLockpicking && context.started)
         {
             lockpick.HitNeedle();
             return;
@@ -316,7 +314,7 @@ public class PlayerMovement : MonoBehaviour
         ItemTransform.position = hand.position;
         if (ItemTransform.CompareTag("Extinguisher"))
         {
-            ItemTransform.localRotation = Quaternion.Euler(-90, hand.rotation.y, 90);
+            ItemTransform.localRotation = Quaternion.Euler(-90, 180, 90);
         } else if (ItemTransform.CompareTag("Ladder"))
         {
             ItemTransform.localRotation = Quaternion.Euler(hand.rotation.x, 60, 90);
@@ -392,7 +390,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        if (ItemTransform.CompareTag("Lockpick") && CheckCage())
+        if (ItemTransform.CompareTag("Lockpick") && CheckCage() && !lockpick.IsCompleted)
         {
             lockpickPanel.SetActive(true);
             lockpick.StartMinigame();
@@ -402,7 +400,7 @@ public class PlayerMovement : MonoBehaviour
 
     public bool CheckLadderPlaceable()
     {
-        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 4f, placeholderLadderLayer))
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 2f, placeholderLadderLayer))
         {
             placeholderLadderTransform = hit.transform;
             return true;
@@ -412,7 +410,7 @@ public class PlayerMovement : MonoBehaviour
 
     public bool CheckLeverPlaceable()
     {
-        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 4f, placeholderLeverLayer))
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 2f, placeholderLeverLayer))
         {
             placeholderLeverTransform = hit.transform;
             return true;
@@ -421,7 +419,7 @@ public class PlayerMovement : MonoBehaviour
     }
     public bool CheckValvePlaceable()
     {
-        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 4f, placeholderValveLayer))
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 2f, placeholderValveLayer))
         {
             placeholderValveTransform = hit.transform;
             return true;
@@ -431,7 +429,7 @@ public class PlayerMovement : MonoBehaviour
 
     public bool CheckIsSheep()
     {
-        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 4f, sheepLayer))
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 1f, sheepLayer))
         {
             actualSheep = hit.transform.gameObject;
             return true;
@@ -441,7 +439,7 @@ public class PlayerMovement : MonoBehaviour
 
     public bool CheckCage()
     {
-        return Physics.Raycast(cameraTransform.position, cameraTransform.forward, 4f, cageLayer);
+        return Physics.Raycast(cameraTransform.position, cameraTransform.forward, 2f, cageLayer);
     }
 
     private bool CheckLadder()
@@ -463,7 +461,7 @@ public class PlayerMovement : MonoBehaviour
 
     public bool LookingAtNpc()
     {
-        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 4f, npcLayer))
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 2f, npcLayer))
         {
             currentNpc = hit.transform;
             return true;

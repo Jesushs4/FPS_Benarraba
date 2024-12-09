@@ -4,19 +4,41 @@ public class Fire : MonoBehaviour
 {
     public float extinguishRate = 0.1f;
     private bool isExtinguished = false;
+    private ParticleSystem[] childParticles;
 
+
+    private void Awake()
+    {
+        childParticles = GetComponentsInChildren<ParticleSystem>();
+    }
     public void Extinguish()
     {
-        Debug.Log("ENTRA2");
+        if (isExtinguished || childParticles == null || childParticles.Length == 0) return;
 
-        if (isExtinguished) return;
+        bool allParticlesShrunk = true;
 
-        transform.localScale -= Vector3.one * extinguishRate;
-
-        if (transform.localScale.x <= 0.1f || transform.localScale.y <= 0.1f || transform.localScale.z <= 0.1f)
+        foreach (var particle in childParticles)
         {
-            transform.localScale = Vector3.zero;
+            var mainModule = particle.main;
+            mainModule.startSize = new ParticleSystem.MinMaxCurve(
+                Mathf.Max(0, mainModule.startSize.constantMin - extinguishRate),
+                Mathf.Max(0, mainModule.startSize.constantMax - extinguishRate)
+            );
+
+            var emission = particle.emission;
+            emission.rateOverTime = Mathf.Max(0, emission.rateOverTime.constant - extinguishRate * 10);
+
+            if (mainModule.startSize.constantMax > 0.1f || emission.rateOverTime.constant > 0)
+            {
+                allParticlesShrunk = false;
+            }
+        }
+
+        if (allParticlesShrunk)
+        {
             isExtinguished = true;
+
+
             Destroy(gameObject);
         }
     }

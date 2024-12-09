@@ -12,7 +12,9 @@ public class Lever : MonoBehaviour
     private Coroutine continuousReverseCoroutine;
     private float lastInteractionTime;
     [SerializeField] private GameObject wellPanel;
+    [SerializeField] private Transform sheep;
     private Slider wellProgress;
+    private bool sheepMoved = false;
 
     private void Start()
     {
@@ -25,13 +27,29 @@ public class Lever : MonoBehaviour
         {
             wellCompleted = true;
             wellPanel.SetActive(false);
+            if (!sheepMoved)
+            {
+                MoveSheepUp();
+            }
+            
         }
-        if (wellProgress.value > 0) {
+        if (wellProgress.value > 0 && wellProgress.value < 100) {
             wellPanel.SetActive(true);
         } else
         {
             wellPanel.SetActive(false);
         }
+    }
+
+    private void MoveSheepUp()
+    {
+        sheepMoved = true;
+
+        float targetY = sheep.position.y + 2f;
+        sheep.DOMoveY(targetY, 1f)
+            .SetEase(Ease.OutBounce);
+        sheepMoved = true;
+
     }
 
     public void PutLever(Transform placeholderTransform)
