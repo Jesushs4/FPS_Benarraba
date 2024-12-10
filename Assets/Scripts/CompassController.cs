@@ -8,11 +8,13 @@ public class CompassController : MonoBehaviour
     private GameObject ovejaTarget;
     public float CreasingSpeed;
     [SerializeField] private GameObject compassPointer;
-
+    private bool brujulaActive;
+    private AudioSource wistle;
 
     private void Start()
     {
         DetectionCollider = GetComponent<SphereCollider>();
+        wistle = GetComponent<AudioSource>();
     }
     void Update()
     {
@@ -28,12 +30,13 @@ public class CompassController : MonoBehaviour
 
         DetectionCollider.radius = RadiusCreasing;
 
-        compassPointer.transform.LookAt(new Vector3(ovejaTarget.transform.position.x, compassPointer.transform.position.y, ovejaTarget.transform.position.z));
+        compassPointer.transform.LookAt(new Vector3(ovejaTarget.transform.position.x, ovejaTarget.transform.position.y, ovejaTarget.transform.position.z));
     }
 
 
     public void Silbar()
     {
+        wistle.Play();
         increaseCollider = true;
     }
 
@@ -44,6 +47,20 @@ public class CompassController : MonoBehaviour
         {
             increaseCollider = false;
             ovejaTarget = other.gameObject;
+        }
+    }
+
+    public void MostrarBrujula()
+    {
+        if (!brujulaActive) 
+        {
+            this.gameObject.SetActive(false);
+            brujulaActive = true;
+        }
+        else if (brujulaActive)
+        {
+            this.gameObject.SetActive(true);
+            brujulaActive = false;
         }
     }
 }

@@ -19,6 +19,9 @@ public class Lockpick : MonoBehaviour
     [SerializeField] private Transform cageDoor;
     [SerializeField] private BoxCollider sheepCollider;
 
+    private LayerMask sheepLayer;
+    private LayerMask normalLayer;
+
     private bool isCompleted = false;
     private bool isLockpicking = false;
 
@@ -27,7 +30,12 @@ public class Lockpick : MonoBehaviour
 
     private void Awake()
     {
+
+        normalLayer = LayerMask.GetMask("Default");
+        sheepLayer = LayerMask.GetMask("SheepLayer");
+
         sheepCollider.enabled = false;
+        sheepCollider.gameObject.layer = normalLayer;
     }
 
     private void Update()
@@ -46,6 +54,8 @@ public class Lockpick : MonoBehaviour
             IsCompleted = true;
             sheepCollider.enabled = true;
             isLockpicking = false;
+
+            sheepCollider.gameObject.layer = LayerMask.NameToLayer("SheepLayer");
         }
     }
 
