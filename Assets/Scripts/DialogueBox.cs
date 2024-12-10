@@ -22,6 +22,7 @@ public class DialogueBox : MonoBehaviour
     }
 
 
+
     public void Talk()
     {
         if (!dialoguePanel.activeSelf)
@@ -55,7 +56,7 @@ public class DialogueBox : MonoBehaviour
     {
         dialogueText.text = string.Empty;
         isTyping = true;
-
+        AudioManager.Instance.TalkAudio.Play();
         foreach (char letter in currentDialogue)
         {
                 dialogueText.text += letter;
@@ -63,6 +64,7 @@ public class DialogueBox : MonoBehaviour
         }
 
         isTyping = false;
+        AudioManager.Instance.TalkAudio.Stop();
     }
 
 

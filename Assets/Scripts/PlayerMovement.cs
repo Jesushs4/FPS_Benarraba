@@ -208,6 +208,11 @@ public class PlayerMovement : MonoBehaviour
     public void Attack(InputAction.CallbackContext context)
     {
 
+        if (lockpick.IsLockpicking)
+        {
+            return;
+        }
+
         if (IsGrabbing && ItemTransform.CompareTag("Extinguisher"))
         {
             Extinguisher extinguisher = ItemTransform.GetComponent<Extinguisher>();

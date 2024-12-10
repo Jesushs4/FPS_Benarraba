@@ -9,6 +9,9 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioSource wistleAudio;
     [SerializeField] private AudioSource talkAudio;
     [SerializeField] private AudioSource fountainAudio;
+    [SerializeField] private AudioSource lockpickCorrect;
+    [SerializeField] private AudioSource lockpickFail;
+
 
     private bool startSheepSound;
     private bool startWhistleSound;
@@ -17,6 +20,7 @@ public class AudioManager : MonoBehaviour
     public bool StartSheepSound { get => startSheepSound; set => startSheepSound = value; }
     public bool StartWhistleSound { get => startWhistleSound; set => startWhistleSound = value; }
     public AudioSource FountainAudio { get => fountainAudio; set => fountainAudio = value; }
+    public AudioSource TalkAudio { get => talkAudio; set => talkAudio = value; }
 
     private void Awake()
     {
@@ -36,14 +40,6 @@ public class AudioManager : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance.InDialogue)
-        {
-            talkAudio.enabled = true;
-        }
-        else
-        {
-            talkAudio.enabled = false;
-        }
 
         if (StartSheepSound)
         {
@@ -56,5 +52,15 @@ public class AudioManager : MonoBehaviour
             startWhistleSound = false;
         }
 
+    }
+
+    public void PlayLockpickCorrect()
+    {
+        lockpickCorrect.Play();
+    }
+
+    public void PlayLockpickFail()
+    {
+        lockpickFail.Play();
     }
 }

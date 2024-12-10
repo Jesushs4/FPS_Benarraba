@@ -73,6 +73,10 @@ public class Lockpick : MonoBehaviour
             {
                 hitCount++;
                 imageProgress.fillAmount = (float)hitCount / hitNeeded;
+                AudioManager.Instance.PlayLockpickCorrect();
+            } else
+            {
+                AudioManager.Instance.PlayLockpickFail();
             }
 
             StartCoroutine(NewLockpick());
