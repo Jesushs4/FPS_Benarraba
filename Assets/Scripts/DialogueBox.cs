@@ -21,6 +21,7 @@ public class DialogueBox : MonoBehaviour
         playerLayer = LayerMask.GetMask("Player");
     }
 
+
     public void Talk()
     {
         if (!dialoguePanel.activeSelf)
@@ -55,7 +56,6 @@ public class DialogueBox : MonoBehaviour
         dialogueText.text = string.Empty;
         isTyping = true;
 
-
         foreach (char letter in currentDialogue)
         {
                 dialogueText.text += letter;
@@ -63,7 +63,6 @@ public class DialogueBox : MonoBehaviour
         }
 
         isTyping = false;
-
     }
 
 

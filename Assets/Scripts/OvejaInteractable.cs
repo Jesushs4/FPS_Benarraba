@@ -24,6 +24,7 @@ public class OvejaInteractable : MonoBehaviour
         Instantiate(Explosion, transform.position, Quaternion.identity);
         Explosion.Play();
         GameManager.Instance.SheepCounter--;
+        AudioManager.Instance.StartSheepSound = true;
         Destroy(gameObject);
     }
 }

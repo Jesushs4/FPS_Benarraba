@@ -1,10 +1,22 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
-    [SerializeField] private AudioSource powerUpAudio;
-    [SerializeField] private AudioSource damageAudio;
+    [SerializeField] private AudioSource sheepAudio;
+    [SerializeField] private AudioSource footStepAudio;
+    [SerializeField] private AudioSource wistleAudio;
+    [SerializeField] private AudioSource talkAudio;
+    [SerializeField] private AudioSource fountainAudio;
+
+    private bool startSheepSound;
+    private bool startWhistleSound;
+
+    public AudioSource FootStepAudio { get => footStepAudio; set => footStepAudio = value; }
+    public bool StartSheepSound { get => startSheepSound; set => startSheepSound = value; }
+    public bool StartWhistleSound { get => startWhistleSound; set => startWhistleSound = value; }
+    public AudioSource FountainAudio { get => fountainAudio; set => fountainAudio = value; }
 
     private void Awake()
     {
@@ -22,13 +34,27 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void PlayDamageSound()
+    private void Update()
     {
-        damageAudio.Play();
-    }
+        if (GameManager.Instance.InDialogue)
+        {
+            talkAudio.enabled = true;
+        }
+        else
+        {
+            talkAudio.enabled = false;
+        }
 
-    public void PlayPowerUpSound()
-    {
-        powerUpAudio.Play();
+        if (StartSheepSound)
+        {
+            sheepAudio.Play();
+            startSheepSound = false;
+        }
+        if (StartWhistleSound)
+        {
+            wistleAudio.Play();
+            startWhistleSound = false;
+        }
+
     }
 }

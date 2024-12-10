@@ -5,12 +5,14 @@ public class Extinguisher : MonoBehaviour
     LayerMask fireLayer;
     private bool isActive = false;
     private ParticleSystem extinguisherParticles;
+    private AudioSource extinguisherSound;
 
     private void Awake()
     {
         fireLayer = LayerMask.GetMask("Fire");
         extinguisherParticles = transform.GetChild(0).GetComponent<ParticleSystem>();
         extinguisherParticles.Stop();
+        extinguisherSound = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -18,8 +20,13 @@ public class Extinguisher : MonoBehaviour
         if (isActive)
         {
             UseExtinguisher();
+            extinguisherSound.enabled = true;
         }
-        
+        else 
+        {
+            extinguisherSound.enabled = false;
+        }
+
     }
 
     public void StartExtinguish()

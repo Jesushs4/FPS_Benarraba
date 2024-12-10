@@ -36,7 +36,7 @@ public class CompassController : MonoBehaviour
 
     public void Silbar()
     {
-        wistle.Play();
+        AudioManager.Instance.StartWhistleSound = true;
         increaseCollider = true;
     }
 
@@ -47,6 +47,7 @@ public class CompassController : MonoBehaviour
         {
             increaseCollider = false;
             ovejaTarget = other.gameObject;
+            AudioManager.Instance.StartSheepSound = true;
         }
     }
 

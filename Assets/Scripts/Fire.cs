@@ -5,11 +5,13 @@ public class Fire : MonoBehaviour
     public float extinguishRate = 0.1f;
     private bool isExtinguished = false;
     private ParticleSystem[] childParticles;
+    private AudioSource fireSound;
 
 
     private void Awake()
     {
         childParticles = GetComponentsInChildren<ParticleSystem>();
+        fireSound = GetComponent<AudioSource>();
     }
     public void Extinguish()
     {
@@ -38,7 +40,7 @@ public class Fire : MonoBehaviour
         {
             isExtinguished = true;
 
-
+            fireSound.enabled = false;
             Destroy(gameObject);
         }
     }

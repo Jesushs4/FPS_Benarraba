@@ -69,6 +69,8 @@ public class PlayerMovement : MonoBehaviour
     private bool ValvePlaced;
     private Transform ValveTransform;
 
+    private bool playFootAudio;
+
     public Transform ItemTransform { get => itemTransform; set => itemTransform = value; }
     public bool LeverPlaced { get => leverPlaced; set => leverPlaced = value; }
     public bool IsGrabbing { get => isGrabbing; set => isGrabbing = value; }
@@ -122,6 +124,28 @@ public class PlayerMovement : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
         }
 
+
+        #region FootAudio
+
+        if (playFootAudio)
+        {
+            AudioManager.Instance.FootStepAudio.enabled = true;
+
+            if (isSprinting)
+            {
+                AudioManager.Instance.FootStepAudio.pitch = 1.8f;
+            }
+            else
+            {
+                AudioManager.Instance.FootStepAudio.pitch = 1f;
+            }
+        }
+        else
+        {
+            AudioManager.Instance.FootStepAudio.enabled = false;
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -132,6 +156,16 @@ public class PlayerMovement : MonoBehaviour
     {
         moveInput = context.ReadValue<Vector2>();
         isMoving = moveInput != Vector2.zero;
+
+        if (context.phase.IsInProgress())
+        {
+            playFootAudio = true;
+        }
+        else
+        {
+            playFootAudio = false;
+        }
+
     }
 
     /// <summary>

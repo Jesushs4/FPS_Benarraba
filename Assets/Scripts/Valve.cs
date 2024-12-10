@@ -9,6 +9,23 @@ public class Valve : MonoBehaviour
     [SerializeField] private ParticleSystem fountain;
     [SerializeField] private GameObject fountainSheep;
 
+    private void Update()
+    {
+        #region FountainAudio
+
+        if (!fountainOff)
+        {
+            AudioManager.Instance.FountainAudio.enabled = true;
+
+        }
+        else
+        {
+            AudioManager.Instance.FountainAudio.enabled = false;
+        }
+
+        #endregion
+    }
+
     public void PutValve (Transform placeholderTransform)
     {
 
