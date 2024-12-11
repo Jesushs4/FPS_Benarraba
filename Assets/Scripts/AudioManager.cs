@@ -33,8 +33,7 @@ public class AudioManager : MonoBehaviour
         {
             //asign the static instance to this object
             Instance = this;
-            //mantain it to next scene
-            DontDestroyOnLoad(this);
+
         }
     }
 
