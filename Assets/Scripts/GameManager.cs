@@ -1,7 +1,9 @@
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -18,6 +20,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject hudPanel;
+    [SerializeField] private GameObject fadePanel;
     private TextMeshProUGUI sheepCounterText;
     private TextMeshProUGUI timerText;
     [SerializeField] private GameObject endPanel;
@@ -40,7 +43,14 @@ public class GameManager : MonoBehaviour
         SheepCounter = GameObject.FindGameObjectsWithTag("Sheep").Length;
         sheepCounterText = hudPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
         timerText = hudPanel.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+
         
+        
+    }
+
+    private void Start()
+    {
+        FadeIn();
     }
 
     private void Update()
@@ -52,7 +62,7 @@ public class GameManager : MonoBehaviour
             UpdateTimer();
         }
 
-        if (sheepCounter <= 0)
+        if (sheepCounter <= 0 && !endPanel.activeSelf)
         {
             EndGame();
         }
@@ -65,6 +75,15 @@ public class GameManager : MonoBehaviour
             TogglePause();
         }
     }
+
+    private void FadeIn()
+    {
+        fadePanel.GetComponent<Image>().DOFade(0f, 1.5f).OnComplete(() =>
+        {
+            fadePanel.SetActive(false);
+        });
+    }
+
 
     public void EndGame()
     {
@@ -107,11 +126,22 @@ public class GameManager : MonoBehaviour
 
     public void ReturnToMenu()
     {
-        SceneManager.LoadScene("MainMenu");
+        Time.timeScale = 1f;
+        fadePanel.SetActive(true);
+        fadePanel.GetComponent<Image>().DOFade(1f, 1.5f).OnComplete(() =>
+        {
+            SceneManager.LoadScene("MainMenu");
+        });
     }
 
     public void RestartGame()
     {
-        SceneManager.LoadScene("OutdoorsScene");
+        Time.timeScale = 1f;
+        fadePanel.SetActive(true);
+        fadePanel.GetComponent<Image>().DOFade(1f, 1.5f).OnComplete(() =>
+        {
+            SceneManager.LoadScene("OutdoorsScene");
+        });
+        
     }
 }
