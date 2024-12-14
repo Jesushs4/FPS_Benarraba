@@ -333,7 +333,7 @@ public class PlayerMovement : MonoBehaviour
 
     public bool CheckInteractuable()
     {
-        float rayLength = 2f;
+        float rayLength = 4f;
         if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, rayLength, itemLayer))
         {
             if (!isGrabbing)
@@ -439,7 +439,7 @@ public class PlayerMovement : MonoBehaviour
 
     public bool CheckLadderPlaceable()
     {
-        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 2f, placeholderLadderLayer))
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 4F, placeholderLadderLayer))
         {
             placeholderLadderTransform = hit.transform;
             return true;
@@ -449,7 +449,7 @@ public class PlayerMovement : MonoBehaviour
 
     public bool CheckLeverPlaceable()
     {
-        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 2f, placeholderLeverLayer))
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 4F, placeholderLeverLayer))
         {
             placeholderLeverTransform = hit.transform;
             return true;
@@ -458,7 +458,7 @@ public class PlayerMovement : MonoBehaviour
     }
     public bool CheckValvePlaceable()
     {
-        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 2f, placeholderValveLayer))
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 4F, placeholderValveLayer))
         {
             placeholderValveTransform = hit.transform;
             return true;
@@ -468,7 +468,7 @@ public class PlayerMovement : MonoBehaviour
 
     public bool CheckIsSheep()
     {
-        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 1f, sheepLayer))
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 4f, sheepLayer))
         {
             actualSheep = hit.transform.gameObject;
             return true;
@@ -478,13 +478,13 @@ public class PlayerMovement : MonoBehaviour
 
     public bool CheckCage()
     {
-        return Physics.Raycast(cameraTransform.position, cameraTransform.forward, 2f, cageLayer);
+        return Physics.Raycast(cameraTransform.position, cameraTransform.forward, 4f, cageLayer);
     }
 
     private bool CheckLadder()
 
     {
-        float rayLength = 2f;
+        float rayLength = 4f;
         if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, rayLength, climbLayer))
         {
             currentLadder = hit.transform;
@@ -500,7 +500,7 @@ public class PlayerMovement : MonoBehaviour
 
     public bool LookingAtNpc()
     {
-        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 2f, npcLayer))
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, 4f, npcLayer))
         {
             currentNpc = hit.transform;
             return true;

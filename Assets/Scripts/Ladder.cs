@@ -13,6 +13,8 @@ public class Ladder : MonoBehaviour
             transform.rotation = placeholderTransform.rotation;
             gameObject.layer = LayerMask.NameToLayer("Climbable");
             climbArea.enabled = true;
+
+            placeholderTransform.gameObject.GetComponent<Renderer>().enabled = false;
     }
 
 
